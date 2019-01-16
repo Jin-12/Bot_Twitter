@@ -31,4 +31,21 @@ end
         client.favorite(tweet)
       end
   end
-like_tweets(client)
+
+  def follow_bonjour(client)
+    nb = 3
+    client.search("bonjour_monde", result_type:"recent").take(nb).collect do |tweet|
+    if tweet == tweet
+      nb -= 1
+    end
+    client.follow(tweet.user)
+    end
+  end
+  follow_bonjour(client)
+
+  def streaming(client)
+    topics = ["bonjour_monde"]
+    client.filter(track: topics.join(",")) do |object|
+      puts object.text if object.is_a?(Twitter::Tweet)
+    end
+  end 
