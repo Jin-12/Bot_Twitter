@@ -13,7 +13,17 @@ client = Twitter::REST::Client.new do |config|
   end
   return client
 end
+def login_streaming_twitter
+client_stream = Twitter::Streaming::Client.new do |config|
+  config.consumer_key        = "YOUR_CONSUMER_KEY"
+  config.consumer_secret     = "YOUR_CONSUMER_SECRET"
+  config.access_token        = "YOUR_ACCESS_TOKEN"
+  config.access_token_secret = "YOUR_ACCESS_SECRET"
+  end
+  return client_stream
+end
 client = login_twitter
+client_stream = login_streaming_twitter
 def first_tweet(client)
   client.update('Mon premier tweet en Ruby !!!!')
 end
@@ -43,9 +53,10 @@ end
   end
   follow_bonjour(client)
 
-  def streaming(client)
-    topics = ["bonjour_monde"]
-    client.filter(track: topics.join(",")) do |object|
-      puts object.text if object.is_a?(Twitter::Tweet)
+  def streaming(client, client_stream)
+  client_stream.filter(track: "bonjour_monde") do |object|
+      puts tweets.user
+      client.favorite(tweet)
+      client.follow(tweet.user)
     end
-  end 
+  end
